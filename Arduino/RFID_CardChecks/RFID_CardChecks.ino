@@ -94,8 +94,8 @@ boolean newUID(MFRC522 &mfrc522)
  */
 void displayUIDSerial(MFRC522 &mfrc522, char reader_num)
 {
-//  Serial.print("Reader: ");
-//  Serial.println(reader_num);
+  Serial.print("Reader: ");
+  Serial.println(reader_num);
   
   // all cards received with module have 4 Byte UIDs that have been tested
   for(int i = 0; i <= mfrc522.uid.size; i++)
