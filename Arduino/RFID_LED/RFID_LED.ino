@@ -11,14 +11,15 @@
 #include <SPI.h>
 
 //== LED PINS ==
-int red = 6;
-int grn = 5;
-int blu = 3;
+int pRED = 10;
+int pGRN = 9;
+int pBLU = 3;
 
 //== LED colour ==
-int cRED = 0
-int cGRN = 0
-int cBLU = 0
+int red = 0;
+int grn = 0;
+int blu = 0;
+int cSTP = 15;
 /*
 == SPI Pinouts ==
  MISO - pin D12
@@ -34,9 +35,9 @@ MFRC522 reader_1(SS_PIN1, RST_PIN1);	// Create MFRC522 instance.
 
 void setup()
 {
-  pinMode(red, OUTPUT);
-  pinMode(grn, OUTPUT);
-  pinMode(blu, OUTPUT);
+  pinMode(pRED, OUTPUT);
+  pinMode(pGRN, OUTPUT);
+  pinMode(pBLU, OUTPUT);
   
   // Init serial
   Serial.begin(9600);
@@ -46,11 +47,17 @@ void setup()
 
   // Init RFID module
   reader_1.PCD_Init();
+  
+  analogWrite(pRED, red);
+  analogWrite(pGRN, red);
+  analogWrite(pBLU, red);
 }
 
 void loop()
 {
   RFID_Read(reader_1, 1);
+  delay(100);
+  RGBLED();
 }
 
 /*
@@ -124,8 +131,50 @@ void displayUIDSerial(MFRC522 &mfrc522, int reader_num)
   mfrc522.PICC_HaltA();
 }
 
-
-
+/*
+ *
+ */
+void RGBLED()
+{
+  if(red < 255 && grn == 0 && blu == 0)
+  {
+    red += cSTP;
+  }
+  else if(red == 255 && grn < 255 && blu == 0)
+  {
+    grn += cSTP;
+  }
+  else if(red > 0 && grn == 255 && blu == 0)
+  {
+    red -= cSTP;
+  }
+  else if(red ==0 && grn == 255 && blu < 255)
+  {
+    blu += cSTP;
+  }
+  else if(red == 0 && grn > 0 && blu == 255)
+  {
+    grn -= cSTP;
+  }
+  else if(red < 255 && grn == 0 && blu == 255)
+  {
+    red += cSTP;
+  }
+  else if(red == 255 && grn < 255 && blu == 255)
+  {
+    grn += cSTP;
+  }
+  else
+  {
+    red = 0;
+    grn = 0;
+    blu = 0;
+  }
+  
+  analogWrite(pRED, red);
+  analogWrite(pGRN, grn);
+  analogWrite(pBLU, blu);
+}
 
 
 
