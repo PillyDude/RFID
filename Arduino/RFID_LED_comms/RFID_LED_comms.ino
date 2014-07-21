@@ -1,25 +1,25 @@
 /***************************************  
- *  RFID_CardChecks
- *
- *  Testing whether using two MFRC522 RFID modules is possible.
- *
- *  Using .csv formating in serial monitor so to easily sort out duplicate UID of cards
- *
- */
+ *  RFID_LED_comms
+ ***************************************/
 
 #include <MFRC522.h> // .h and .cpp files from https://github.com/miguelbalboa/rfid
 #include <SPI.h>
+#include <MarioComms.h>
 
+
+//****************************
 //== LED PINS ==
 int red = 6;
 int grn = 5;
 int blu = 3;
 
 //== LED colour ==
-int cRED = 0
-int cGRN = 0
-int cBLU = 0
-/*
+int cRED = 0;
+int cGRN = 0;
+int cBLU = 0;
+//****************************
+
+/*****************************
 == SPI Pinouts ==
  MISO - pin D12
  MOSI - pin D11
@@ -31,6 +31,13 @@ int cBLU = 0
 #define RST_PIN1  7
 
 MFRC522 reader_1(SS_PIN1, RST_PIN1);	// Create MFRC522 instance.
+//*****************************
+
+//*****************************
+//Serial input message string
+MarioComms comms(50, red, grn, blu);
+
+//*****************************
 
 void setup()
 {
@@ -53,6 +60,15 @@ void loop()
   RFID_Read(reader_1, 1);
 }
 
+void serialEvent()
+{
+  comms.collectMsg(&comms.Msg);
+}
+
+
+//=====================================================================
+//                         user define functions
+//=====================================================================
 /*
  *  RFID_Read: checks if new UID has been recieved then displays
  *    over serial
@@ -65,7 +81,9 @@ void RFID_Read(MFRC522 &mfrc522, int num)
 {
     if(newUID(mfrc522))
   {
-    displayUIDSerial(mfrc522, num);
+    //displayUIDSerial(mfrc522, num);
+    //Serial.println(mfrc522.uid.size);
+    comms.sendUID(mfrc522.uid.size, mfrc522.uid.uidByte);
   }
 }
 
@@ -123,7 +141,6 @@ void displayUIDSerial(MFRC522 &mfrc522, int reader_num)
   
   mfrc522.PICC_HaltA();
 }
-
 
 
 
