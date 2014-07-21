@@ -8,43 +8,50 @@
 
 class MarioComms
 {
-	// public:
-		// /*
-		// *	Constants
-		// */
-		// enum Command {
-			// CMD_newID		= 0x01;
-			// CMD_sendID		= 0x02;
-			// CMD_LEDColour	= 0x03;
-		// };
+	public:
+		/*
+		*	Constants
+		*/
+		enum Command {
+			CMD_newID		= 0x01,
+			CMD_sendID		= 0x02,
+			CMD_LEDColour	= 0x6C
+		};
 		
-		// enum Header {
-			// HDR_UID			= 0x01;
-		// };
+		enum Header {
+			HDR_UID			= 'U',
+		};
 		
-		// /*
-		// *	Structures
-		// */
-		// typedef struct {
-			// int len;
-			// String inputString;
-		// } MSG;
+		/*
+		*	Structures
+		*/
+		typedef struct {
+			int len;
+			String inputString;
+		} MSG;
 		
-		// /*
-		// *	Variables
-		// */
-		// MSG Msg;
+		/*
+		*	Variables
+		*/
+		MSG Msg;
 		
-		// /*
-		// *	functions
-		// */
-		// void readmsg(MSG *msg);
-		// void collectMsg(MSG *msg);
-		// void setLED(MSG *msg);
+		/*
+		*
+		*/
+		MarioComms(int rsvLen, int pRED, int pGRN, int pBLU);
 		
-	// private:
-		// int _pRED;
-		// int _pGRN;
-		// int _pBLU;
+		/*
+		*	functions
+		*/
+		void msgReset(MSG *msg);
+		void readMsg(MSG *msg);
+		void collectMsg(MSG *msg);
+		void setLED(MSG *msg);
+		void sendUID(int size, byte uid[]);
+		
+	private:
+		int _pRED;
+		int _pGRN;
+		int _pBLU;
 	
 };
