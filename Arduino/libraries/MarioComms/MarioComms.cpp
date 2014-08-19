@@ -38,18 +38,25 @@ void MarioComms::readMsg(MSG *msg)
 	switch(in) {
 		case(Command(CMD_newID)):
 			// write to EEPROM devices serial ID
+			// [CMD,ID,\n] => msg->len should == 5
+			if(msg->len = 3){
+				writeID(MSG *msg);
+			}else{
+				Serial.println("CMD_newID msg invalid length");
+			}
 			break;
 		case(Command(CMD_sendID)):
 			// read from EEPROM and send back
+			Serial.println(EEPROM.read(0));
 			break;
 		case(Command(CMD_LEDColour)):
 			// [CMD,redByte,grnByte,bleByte,\n] => msg->len should == 5
 			if(msg->len == 5)
 			{
-				setLED(msg);
+				setLED(MSG *msg);
 			}else
 			{
-				Serial.println("failed");
+				Serial.println("CMD_LEDColour msg invalid length");
 			}
 			break;
 		default:
@@ -97,6 +104,13 @@ void MarioComms::sendUID(int size, byte uid[])
 	Serial.println(out);
 }
 
+void MarioComms::writeID(MSG *msg)
+{
+	//look at received message and get new ID
+	int ID = (int)msg->inputString.charAt(2);
+	
+	EEPROM.write(0, ID);
+}
 
 
 

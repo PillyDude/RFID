@@ -48,6 +48,7 @@ class MarioComms
 		void collectMsg(MSG *msg);
 		void setLED(MSG *msg);
 		void sendUID(int size, byte uid[]);
+		void writeID(MSG *msg);
 		
 	private:
 		int _pRED;
